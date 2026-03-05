@@ -7,6 +7,9 @@ import guru.thomasweber.tools.futuremaintenance.api.FutureMaintenance;
 
 public class MethodAnnotatedSubject {
 
+  @FutureMaintenance(taskClass = TaskEnumSubject.class, value = "CLEANUP_API_METHOD", extraInformation = "extra information")
+  private final String field = "default value";
+
   @FutureMaintenance(taskClass = TaskEnumSubject.class, value = "CLEANUP_API_METHOD")
   public void method() {}
 }

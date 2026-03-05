@@ -4,6 +4,8 @@
 package guru.thomasweber.tools.futuremaintenance.api;
 
 import java.time.LocalDate;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 public interface MaintenanceTask {
   String issueNumber();
@@ -11,4 +13,23 @@ public interface MaintenanceTask {
   LocalDate executableAfter();
 
   String reason();
+
+  static Builder builder() {
+    return new Builder();
+  }
+
+  @Accessors(fluent = true)
+  @Setter
+  class Builder {
+    private String issueNumber;
+    private LocalDate executableAfter;
+    private String reason;
+
+    public MaintenanceTask build() {
+      return new MaintenanceTaskImpl(issueNumber, executableAfter, reason);
+    }
+  }
+
+  record MaintenanceTaskImpl(String issueNumber, LocalDate executableAfter, String reason)
+      implements MaintenanceTask {}
 }
