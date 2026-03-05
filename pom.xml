@@ -197,7 +197,7 @@
                                 <style>GOOGLE</style>
                             </googleJavaFormat>
                             <licenseHeader>
-                                <file>${maven.multiModuleProjectDirectory}/license-header-template.txt</file>
+                                <file>${maven.multiModuleProjectDirectory}/spdx-header-template.txt</file>
                             </licenseHeader>
                             <removeUnusedImports/>
                             <forbidWildcardImports/>
