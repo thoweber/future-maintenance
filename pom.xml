@@ -118,6 +118,7 @@
                     <version>${maven.surefire.plugin.version}</version>
                     <configuration>
                         <useModulePath>false</useModulePath>
+                        <argLine>${surefireArgLine}</argLine>
                     </configuration>
                 </plugin>
 
