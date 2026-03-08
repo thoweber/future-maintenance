@@ -5,12 +5,15 @@ package guru.thomasweber.tools.futuremaintenance.core;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class MaintenanceScannerTest {
 
   @Test
   void scan() {
     var scanner = new MaintenanceScanner();
     var occurrences = scanner.scan("guru.thomasweber.tools.futuremaintenance.core");
-    System.out.println();
+
+    assertEquals(8, occurrences.size());
   }
 }

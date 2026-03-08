@@ -8,18 +8,23 @@ import guru.thomasweber.tools.futuremaintenance.api.MaintenanceTask;
 import io.github.classgraph.AnnotationClassRef;
 import io.github.classgraph.AnnotationInfo;
 
+import java.util.Optional;
+
 public class MaintenanceResolver {
 
   private static final String TASK_CLASS = "taskClass";
   private static final String VALUE = "value";
   private static final String EXTRA_INFORMATION = "extraInformation";
 
-  public static <T extends Enum<T> & MaintenanceTask> ResolvedTask<T> resolve(
+  public static <T extends Enum<T> & MaintenanceTask> Optional<ResolvedTask<T>> resolve(
       AnnotationInfoProvider annotationInfoProvider) {
     // 1. Check for direct annotation
     AnnotationInfo direct = annotationInfoProvider.getAnnotationInfo(FutureMaintenance.class.getName());
     if (direct != null) {
-      return fromAnnotation(direct, direct);
+      Optional<ResolvedTask<T>> resolved = fromAnnotation(direct, direct);
+      if (resolved.isPresent()) {
+        return resolved;
+      }
     }
 
     // 2. Check for meta-annotation (The "Template" pattern)
@@ -29,13 +34,16 @@ public class MaintenanceResolver {
       if (meta != null) {
         // The template (meta) has the 'taskClass',
         // but the usage site might have the 'value' (constant name)
-        return fromAnnotation(usage, meta);
+        Optional<ResolvedTask<T>> resolved = fromAnnotation(usage, meta);
+        if (resolved.isPresent()) {
+          return resolved;
+        }
       }
     }
-    throw new IllegalArgumentException("No FutureMaintenance annotation found on " + annotationInfoProvider.getClassName());
+    return Optional.empty();
   }
 
-  private static <T extends Enum<T> & MaintenanceTask> ResolvedTask<T> fromAnnotation(
+  private static <T extends Enum<T> & MaintenanceTask> Optional<ResolvedTask<T>> fromAnnotation(
       AnnotationInfo usage, AnnotationInfo template) {
     // taskClass usually comes from the Template/Meta level
     AnnotationClassRef classRef =
@@ -53,11 +61,15 @@ public class MaintenanceResolver {
         extraInfo = (String) template.getParameterValues().getValue(EXTRA_INFORMATION);
     }
 
+    if (constantName == null || constantName.isEmpty()) {
+      return Optional.empty();
+    }
+
     @SuppressWarnings("unchecked")
     Class<T> enumClass = (Class<T>) classRef.loadClass();
     T enumConstant = Enum.valueOf(enumClass, constantName);
 
-    return new ResolvedTask<>(enumConstant, extraInfo);
+    return Optional.of(new ResolvedTask<>(enumConstant, extraInfo));
   }
 
 }

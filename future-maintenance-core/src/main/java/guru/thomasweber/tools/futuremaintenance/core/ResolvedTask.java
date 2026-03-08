@@ -4,9 +4,10 @@
 package guru.thomasweber.tools.futuremaintenance.core;
 
 import guru.thomasweber.tools.futuremaintenance.api.MaintenanceTask;
+import org.jspecify.annotations.Nullable;
+
 import java.time.LocalDate;
 import java.util.Optional;
-import org.jspecify.annotations.Nullable;
 
 public class ResolvedTask<T extends Enum<T> & MaintenanceTask> implements MaintenanceTask {
   private final T enumConstant;
