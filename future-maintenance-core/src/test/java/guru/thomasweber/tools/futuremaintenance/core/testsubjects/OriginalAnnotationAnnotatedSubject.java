@@ -6,13 +6,13 @@ package guru.thomasweber.tools.futuremaintenance.core.testsubjects;
 import guru.thomasweber.tools.futuremaintenance.api.FutureMaintenance;
 
 @FutureMaintenance(taskClass = TaskEnumSubject.class, value = "CLEANUP_API_METHOD", extraInformation = "info on class")
-public class MethodAnnotatedSubject {
+public class OriginalAnnotationAnnotatedSubject {
 
   @FutureMaintenance(taskClass = TaskEnumSubject.class, value = "CLEANUP_API_METHOD", extraInformation = "info on field")
   private final String field;
 
   @FutureMaintenance(taskClass = TaskEnumSubject.class, value = "CLEANUP_API_METHOD", extraInformation = "info on constructor")
-  public MethodAnnotatedSubject(String value) {
+  public OriginalAnnotationAnnotatedSubject(String value) {
     this.field = value;
   }
 

@@ -17,7 +17,7 @@ public @interface FutureMaintenance {
   Class<? extends Enum<?>> taskClass();
 
   /** The name of the enum constant (e.g., "CLEANUP_API") */
-  String value();
+  String value() default "";
 
   String extraInformation() default "";
 }
