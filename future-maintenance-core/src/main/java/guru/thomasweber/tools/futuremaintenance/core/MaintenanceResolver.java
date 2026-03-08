@@ -7,7 +7,6 @@ import guru.thomasweber.tools.futuremaintenance.api.FutureMaintenance;
 import guru.thomasweber.tools.futuremaintenance.api.MaintenanceTask;
 import io.github.classgraph.AnnotationClassRef;
 import io.github.classgraph.AnnotationInfo;
-import io.github.classgraph.ClassMemberInfo;
 
 public class MaintenanceResolver {
 
@@ -16,15 +15,15 @@ public class MaintenanceResolver {
   private static final String EXTRA_INFORMATION = "extraInformation";
 
   public static <T extends Enum<T> & MaintenanceTask> ResolvedTask<T> resolve(
-      ClassMemberInfo memberInfo) {
+      AnnotationInfoProvider annotationInfoProvider) {
     // 1. Check for direct annotation
-    AnnotationInfo direct = memberInfo.getAnnotationInfo(FutureMaintenance.class.getName());
+    AnnotationInfo direct = annotationInfoProvider.getAnnotationInfo(FutureMaintenance.class.getName());
     if (direct != null) {
       return fromAnnotation(direct, direct);
     }
 
     // 2. Check for meta-annotation (The "Template" pattern)
-    for (AnnotationInfo usage : memberInfo.getAnnotationInfo()) {
+    for (AnnotationInfo usage : annotationInfoProvider.getAnnotationInfos()) {
       AnnotationInfo meta =
           usage.getClassInfo().getAnnotationInfo(FutureMaintenance.class.getName());
       if (meta != null) {
@@ -33,7 +32,7 @@ public class MaintenanceResolver {
         return fromAnnotation(usage, meta);
       }
     }
-    throw new IllegalArgumentException("No FutureMaintenance annotation found on " + memberInfo.getClassName());
+    throw new IllegalArgumentException("No FutureMaintenance annotation found on " + annotationInfoProvider.getClassName());
   }
 
   private static <T extends Enum<T> & MaintenanceTask> ResolvedTask<T> fromAnnotation(
@@ -60,4 +59,5 @@ public class MaintenanceResolver {
 
     return new ResolvedTask<>(enumConstant, extraInfo);
   }
+
 }

@@ -30,13 +30,40 @@ public class MaintenanceOccurrence<T extends Enum<T> & MaintenanceTask> {
     return new MaintenanceOccurrence<>(t, extraInformation);
   }
 
-  public void withFieldUsage(String className, String fieldName) {
+  public void withFieldUsage(String className, String fieldLocation) {
     if (nonNull(occurenceType)) {
       throw new IllegalStateException("MaintenanceOccurrence is already associated with a type");
     }
     this.className = className;
-    this.locationName = fieldName;
+    this.locationName = fieldLocation;
     this.occurenceType = OccurenceType.FIELD;
+  }
+
+  public void withMethodUsage(String className, String methodLocation) {
+    if (nonNull(occurenceType)) {
+      throw new IllegalStateException("MaintenanceOccurrence is already associated with a type");
+    }
+    this.className = className;
+    this.locationName = methodLocation;
+    this.occurenceType = OccurenceType.METHOD;
+  }
+
+  public void withClassUsage(String className, String classLocation) {
+    if (nonNull(occurenceType)) {
+      throw new IllegalStateException("MaintenanceOccurrence is already associated with a type");
+    }
+    this.className = className;
+    this.locationName = classLocation;
+    this.occurenceType = OccurenceType.CLASS;
+  }
+
+  public void withConstructorUsage(String className, String constructorLocation) {
+    if (nonNull(occurenceType)) {
+      throw new IllegalStateException("MaintenanceOccurrence is already associated with a type");
+    }
+    this.className = className;
+    this.locationName = constructorLocation;
+    this.occurenceType = OccurenceType.CONSTRUCTOR;
   }
 
   public OccurenceType occurenceType() {
