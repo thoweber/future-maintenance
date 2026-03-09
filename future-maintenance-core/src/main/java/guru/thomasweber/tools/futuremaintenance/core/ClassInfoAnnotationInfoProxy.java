@@ -20,7 +20,8 @@ final class ClassInfoAnnotationInfoProxy implements AnnotationInfoProxy {
 
   @Override
   public @Nullable AnnotationInfo getAnnotationInfo(String annotationName) {
-    return classInfo.getAnnotationInfo(requireNonNull(annotationName, "annotationName must not be null"));
+    return classInfo.getAnnotationInfo(
+        requireNonNull(annotationName, "annotationName must not be null"));
   }
 
   @Override
