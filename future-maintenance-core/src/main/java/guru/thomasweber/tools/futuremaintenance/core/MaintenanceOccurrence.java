@@ -21,25 +21,11 @@ public record MaintenanceOccurrence(
     return Optional.ofNullable(extraInformationValue);
   }
 
-  @Override
-  public OccurenceType occurenceType() {
-    return occurenceType;
-  }
-
-  @Override
-  public String className() {
-    return className;
-  }
-
-  @Override
-  public String location() {
-    return location;
-  }
-
   public static MaintenanceOccurrenceBuilder builder(Key key) {
     return new MaintenanceOccurrenceBuilder(key);
   }
 
+  @SuppressWarnings("java:S2972")
   public static final class MaintenanceOccurrenceBuilder {
     private final Key key;
     private @Nullable String extraInformationValue;

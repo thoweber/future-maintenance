@@ -30,5 +30,7 @@ public class OriginalAnnotationAnnotatedSubject {
       taskClass = TaskEnumSubject.class,
       value = "CLEANUP_API_METHOD",
       extraInformation = "info on method")
-  public void method(String param) {}
+  public void method(String param) {
+    // only here to demonstrate the annotation usage
+  }
 }
