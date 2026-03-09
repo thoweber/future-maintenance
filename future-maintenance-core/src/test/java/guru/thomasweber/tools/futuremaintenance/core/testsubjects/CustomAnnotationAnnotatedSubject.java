@@ -3,6 +3,7 @@
 // For full license text see: https://github.com/thoweber/future-maintenance/blob/main/LICENSE
 package guru.thomasweber.tools.futuremaintenance.core.testsubjects;
 
+@SuppressWarnings("unused")
 @MyFutureMaintenance(value = "CLEANUP_API_METHOD", extraInformation = "info on class")
 public class CustomAnnotationAnnotatedSubject {
 

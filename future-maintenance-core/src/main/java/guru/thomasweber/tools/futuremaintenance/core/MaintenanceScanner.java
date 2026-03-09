@@ -19,9 +19,9 @@ public class MaintenanceScanner {
 
   public static final Class<FutureMaintenance> ANNOTATION = FutureMaintenance.class;
 
-  public <T extends Enum<T> & MaintenanceTask> List<MaintenanceOccurrence<T>> scan(
+  public List<MaintenanceOccurrence> scan(
       String packageName) {
-    Map<T, List<MaintenanceOccurrence<T>>> results = new HashMap<>();
+    List<MaintenanceOccurrence> results = new ArrayList<>();
 
     try (ScanResult scanResult =
         new ClassGraph().enableAllInfo().acceptPackages(packageName).scan()) {
@@ -33,11 +33,11 @@ public class MaintenanceScanner {
           .distinct()
           .forEach(classInfo -> processClass(classInfo, results));
     }
-    return results.values().stream().flatMap(Collection::stream) /*.sorted()*/.toList();
+    return Collections.unmodifiableList(results);
   }
 
-  private <T extends Enum<T> & MaintenanceTask> void processClass(
-      ClassInfo classInfo, Map<T, List<MaintenanceOccurrence<T>>> results) {
+  private void processClass(
+      ClassInfo classInfo, List<MaintenanceOccurrence> results) {
     log.info("Processing class: {}", classInfo.getName());
     addTypeInfo(classInfo, results);
     addFieldInfo(classInfo, results);
@@ -45,18 +45,16 @@ public class MaintenanceScanner {
     addMethodInfo(classInfo, results);
   }
 
-  private <T extends Enum<T> & MaintenanceTask> MaintenanceOccurrence<T> getOrCreateOccurrence(
-      ResolvedTask<T> resolvedTask, Map<T, List<MaintenanceOccurrence<T>>> results) {
+  private <T extends Enum<T> & MaintenanceTask> MaintenanceOccurrence.MaintenanceOccurrenceBuilder occurenceBuilder(
+      ResolvedTask<T> resolvedTask) {
     var enumConstant = resolvedTask.enumConstant();
-    results.computeIfAbsent(enumConstant, key -> new ArrayList<>());
-    var occurrence =
-        MaintenanceOccurrence.of(enumConstant, resolvedTask.extraInformation().orElse(null));
-    results.get(enumConstant).add(occurrence);
-    return occurrence;
+    return MaintenanceOccurrence.builder()
+            .key(MaintenanceOccurrence.Key.of(enumConstant))
+            .extraInformation(resolvedTask.extraInformation().orElse(null));
   }
 
   private <T extends Enum<T> & MaintenanceTask> void addFieldInfo(
-      ClassInfo classInfo, Map<T, List<MaintenanceOccurrence<T>>> results) {
+      ClassInfo classInfo, List<MaintenanceOccurrence> results) {
     classInfo.getFieldInfo().stream()
         .filter(fieldInfo -> fieldInfo.hasAnnotation(ANNOTATION))
         .forEach(
@@ -65,13 +63,13 @@ public class MaintenanceScanner {
                   MaintenanceResolver.resolve(AnnotationInfoProvider.of(fieldInfo));
               optTask.ifPresent(
                   resolvedTask ->
-                      getOrCreateOccurrence(resolvedTask, results)
-                          .withFieldUsage(classInfo.getName(), LocationMapper.mapField(fieldInfo)));
+                      results.add(occurenceBuilder(resolvedTask)
+                          .forFieldUsage(classInfo.getName(), LocationMapper.mapField(fieldInfo))));
             });
   }
 
   private <T extends Enum<T> & MaintenanceTask> void addMethodInfo(
-      ClassInfo classInfo, Map<T, List<MaintenanceOccurrence<T>>> results) {
+      ClassInfo classInfo, List<MaintenanceOccurrence> results) {
     classInfo.getMethodInfo().stream()
         .filter(methodInfo -> methodInfo.hasAnnotation(ANNOTATION))
         .forEach(
@@ -80,14 +78,14 @@ public class MaintenanceScanner {
                   MaintenanceResolver.resolve(AnnotationInfoProvider.of(methodInfo));
               optTask.ifPresent(
                   resolvedTask ->
-                      getOrCreateOccurrence(resolvedTask, results)
-                          .withMethodUsage(
-                              classInfo.getName(), LocationMapper.mapMethod(methodInfo)));
+                      results.add(occurenceBuilder(resolvedTask)
+                          .forMethodUsage(
+                              classInfo.getName(), LocationMapper.mapMethod(methodInfo))));
             });
   }
 
   private <T extends Enum<T> & MaintenanceTask> void addConstructorInfo(
-      ClassInfo classInfo, Map<T, List<MaintenanceOccurrence<T>>> results) {
+      ClassInfo classInfo, List<MaintenanceOccurrence> results) {
     classInfo.getConstructorInfo().stream()
         .filter(methodInfo -> methodInfo.hasAnnotation(ANNOTATION))
         .forEach(
@@ -96,19 +94,19 @@ public class MaintenanceScanner {
                   MaintenanceResolver.resolve(AnnotationInfoProvider.of(methodInfo));
               optTask.ifPresent(
                   resolvedTask ->
-                      getOrCreateOccurrence(resolvedTask, results)
-                          .withConstructorUsage(
-                              classInfo.getName(), LocationMapper.mapMethod(methodInfo)));
+                      results.add(occurenceBuilder(resolvedTask)
+                          .forConstructorUsage(
+                              classInfo.getName(), LocationMapper.mapMethod(methodInfo))));
             });
   }
 
   private <T extends Enum<T> & MaintenanceTask> void addTypeInfo(
-      ClassInfo classInfo, Map<T, List<MaintenanceOccurrence<T>>> results) {
+      ClassInfo classInfo, List<MaintenanceOccurrence> results) {
     Optional<ResolvedTask<T>> optTask =
         MaintenanceResolver.resolve(AnnotationInfoProvider.of(classInfo));
     optTask.ifPresent(
         resolvedTask ->
-            getOrCreateOccurrence(resolvedTask, results)
-                .withClassUsage(classInfo.getName(), LocationMapper.mapClass(classInfo)));
+            results.add(occurenceBuilder(resolvedTask)
+                .forClassUsage(classInfo.getName(), LocationMapper.mapClass(classInfo))));
   }
 }
