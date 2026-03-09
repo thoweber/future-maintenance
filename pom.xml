@@ -29,9 +29,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Centralized versions: dependencies -->
+        <slf4j.version>2.0.17</slf4j.version>
         <jspecify.version>1.0.0</jspecify.version>
         <classgraph.version>4.8.165</classgraph.version>
+        <lombok.version>1.18.36</lombok.version>
         <junit.version>5.11.0</junit.version>
+        <assertj.version>3.27.7</assertj.version>
 
         <!-- Centralized versions: plugins -->
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
@@ -49,6 +52,7 @@
         <sonar.projectKey>thoweber_future-maintenance</sonar.projectKey>
         <sonar.scanner.version>5.5.0.6356</sonar.scanner.version>
         <sonar.skip>true</sonar.skip>
+
     </properties>
 
     <!-- Maven Central metadata (fill these properly before release) -->
@@ -79,6 +83,17 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jspecify</groupId>
                 <artifactId>jspecify</artifactId>
                 <version>${jspecify.version}</version>
@@ -95,6 +110,12 @@
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -109,6 +130,12 @@
                     <version>${maven.compiler.plugin.version}</version>
                     <configuration>
                         <release>${maven.compiler.release}</release>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </path>
+                        </annotationProcessorPaths>
                     </configuration>
                 </plugin>
 
@@ -293,6 +320,14 @@
     <!-- dependencies active in all modules -->
     <dependencies>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jspecify</groupId>
             <artifactId>jspecify</artifactId>
         </dependency>
@@ -300,6 +335,18 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- not part of dependency management to exclude from BOM -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

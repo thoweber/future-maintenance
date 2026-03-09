@@ -6,7 +6,7 @@ package guru.thomasweber.tools.futuremaintenance.core.testsubjects;
 import guru.thomasweber.tools.futuremaintenance.api.MaintenanceTask;
 import java.time.LocalDate;
 
-public enum TaskEnumSubject implements MaintenanceTask {
+public enum OtherTaskEnumSubject implements MaintenanceTask {
   CLEANUP_API_METHOD(
       MaintenanceTask.builder()
           .issueNumber("123")
@@ -16,7 +16,7 @@ public enum TaskEnumSubject implements MaintenanceTask {
 
   private final MaintenanceTask task;
 
-  TaskEnumSubject(MaintenanceTask task) {
+  OtherTaskEnumSubject(MaintenanceTask task) {
     this.task = task;
   }
 
