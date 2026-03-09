@@ -20,18 +20,22 @@ class MaintenanceScannerTest {
     var expected = List.of(
         MaintenanceOccurrence.builder()
             .key(MaintenanceOccurrence.Key.of(TaskEnumSubject.CLEANUP_API_METHOD))
+            .extraInformation("info on class")
             .forClassUsage("guru.thomasweber.tools.futuremaintenance.core.testsubjects.CustomAnnotationAnnotatedSubject",
                 "CustomAnnotationAnnotatedSubject"),
         MaintenanceOccurrence.builder()
             .key(MaintenanceOccurrence.Key.of(TaskEnumSubject.CLEANUP_API_METHOD))
+            .extraInformation("info on field")
             .forFieldUsage("guru.thomasweber.tools.futuremaintenance.core.testsubjects.CustomAnnotationAnnotatedSubject",
                 "String field"),
         MaintenanceOccurrence.builder()
             .key(MaintenanceOccurrence.Key.of(TaskEnumSubject.CLEANUP_API_METHOD))
+            .extraInformation("info on constructor")
             .forConstructorUsage("guru.thomasweber.tools.futuremaintenance.core.testsubjects.CustomAnnotationAnnotatedSubject",
                 "<init>(String)"),
         MaintenanceOccurrence.builder()
             .key(MaintenanceOccurrence.Key.of(TaskEnumSubject.CLEANUP_API_METHOD))
+            .extraInformation("info on method")
             .forMethodUsage("guru.thomasweber.tools.futuremaintenance.core.testsubjects.CustomAnnotationAnnotatedSubject",
                 "method(String)"),
         MaintenanceOccurrence.builder()
