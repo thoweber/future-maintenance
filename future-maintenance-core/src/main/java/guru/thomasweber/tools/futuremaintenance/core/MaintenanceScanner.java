@@ -39,10 +39,10 @@ public class MaintenanceScanner {
 
   private void processClass(ClassInfo classInfo, List<MaintenanceOccurrence> results) {
     log.info("Processing class: {}", classInfo.getName());
-    addTypeInfo(classInfo, results);
-    addFieldInfo(classInfo, results);
-    addConstructorInfo(classInfo, results);
-    addMethodInfo(classInfo, results);
+    fetchTypeOccurrences(classInfo).ifPresent(results::add);
+    results.addAll(fetchFieldOccurrences(classInfo));
+    results.addAll(fetchConstructorOccurrences(classInfo));
+    results.addAll(fetchMethodOccurrences(classInfo));
   }
 
   private <T extends Enum<T> & MaintenanceTask>
@@ -53,8 +53,8 @@ public class MaintenanceScanner {
         .extraInformation(resolvedTask.extraInformation().orElse(null));
   }
 
-  private void addFieldInfo(ClassInfo classInfo, List<MaintenanceOccurrence> results) {
-    classInfo.getFieldInfo().stream()
+  private List<MaintenanceOccurrence> fetchFieldOccurrences(ClassInfo classInfo) {
+    return classInfo.getFieldInfo().stream()
         .filter(fieldInfo -> fieldInfo.hasAnnotation(ANNOTATION))
         .map(
             fieldInfo ->
@@ -66,11 +66,11 @@ public class MaintenanceScanner {
                                     classInfo.getName(), LocationMapper.mapField(fieldInfo))))
         .filter(Optional::isPresent)
         .map(Optional::get)
-        .forEach(results::add);
+        .toList();
   }
 
-  private void addMethodInfo(ClassInfo classInfo, List<MaintenanceOccurrence> results) {
-    classInfo.getMethodInfo().stream()
+  private List<MaintenanceOccurrence> fetchMethodOccurrences(ClassInfo classInfo) {
+    return classInfo.getMethodInfo().stream()
         .filter(methodInfo -> methodInfo.hasAnnotation(ANNOTATION))
         .map(
             methodInfo ->
@@ -82,11 +82,11 @@ public class MaintenanceScanner {
                                     classInfo.getName(), LocationMapper.mapMethod(methodInfo))))
         .filter(Optional::isPresent)
         .map(Optional::get)
-        .forEach(results::add);
+        .toList();
   }
 
-  private void addConstructorInfo(ClassInfo classInfo, List<MaintenanceOccurrence> results) {
-    classInfo.getConstructorInfo().stream()
+  private List<MaintenanceOccurrence> fetchConstructorOccurrences(ClassInfo classInfo) {
+    return classInfo.getConstructorInfo().stream()
         .filter(methodInfo -> methodInfo.hasAnnotation(ANNOTATION))
         .map(
             methodInfo ->
@@ -98,15 +98,14 @@ public class MaintenanceScanner {
                                     classInfo.getName(), LocationMapper.mapMethod(methodInfo))))
         .filter(Optional::isPresent)
         .map(Optional::get)
-        .forEach(results::add);
+        .toList();
   }
 
-  private void addTypeInfo(ClassInfo classInfo, List<MaintenanceOccurrence> results) {
-    MaintenanceResolver.resolve(AnnotationInfoProxy.ofClassInfo(classInfo))
+  private Optional<MaintenanceOccurrence> fetchTypeOccurrences(ClassInfo classInfo) {
+    return MaintenanceResolver.resolve(AnnotationInfoProxy.ofClassInfo(classInfo))
         .map(
             resolvedTask ->
                 occurenceBuilder(resolvedTask)
-                    .forClassUsage(classInfo.getName(), LocationMapper.mapClass(classInfo)))
-        .ifPresent(results::add);
+                    .forClassUsage(classInfo.getName(), LocationMapper.mapClass(classInfo)));
   }
 }

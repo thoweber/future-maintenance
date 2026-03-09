@@ -8,8 +8,10 @@ import guru.thomasweber.tools.futuremaintenance.api.MaintenanceTask;
 import io.github.classgraph.AnnotationClassRef;
 import io.github.classgraph.AnnotationInfo;
 import java.util.Optional;
+import lombok.NoArgsConstructor;
 
-public class MaintenanceResolver {
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+public final class MaintenanceResolver {
 
   static final String TASK_CLASS = "taskClass";
   static final String VALUE = "value";

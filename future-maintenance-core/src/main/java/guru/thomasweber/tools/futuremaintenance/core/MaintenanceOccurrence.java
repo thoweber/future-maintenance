@@ -4,6 +4,7 @@
 package guru.thomasweber.tools.futuremaintenance.core;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNull;
 
 import guru.thomasweber.tools.futuremaintenance.api.MaintenanceTask;
 import java.time.LocalDate;
@@ -21,31 +22,17 @@ public record MaintenanceOccurrence(
     return Optional.ofNullable(extraInformationValue);
   }
 
-  @Override
-  public OccurenceType occurenceType() {
-    return occurenceType;
-  }
-
-  @Override
-  public String className() {
-    return className;
-  }
-
-  @Override
-  public String location() {
-    return location;
-  }
-
   public static MaintenanceOccurrenceBuilder builder(Key key) {
     return new MaintenanceOccurrenceBuilder(key);
   }
 
+  @SuppressWarnings("java:S2972")
   public static final class MaintenanceOccurrenceBuilder {
     private final Key key;
     private @Nullable String extraInformationValue;
-    private OccurenceType occurenceType;
-    private String className;
-    private String locationName;
+    private @Nullable OccurenceType occurenceType;
+    private @Nullable String className;
+    private @Nullable String locationName;
 
     private MaintenanceOccurrenceBuilder(Key key) {
       this.key = key;
@@ -89,6 +76,9 @@ public record MaintenanceOccurrence(
     }
 
     private MaintenanceOccurrence build() {
+      requireNonNull(occurenceType, "occurenceType must not be null");
+      requireNonNull(className, "className must not be null");
+      requireNonNull(locationName, "locationName must not be null");
       return new MaintenanceOccurrence(
           key, occurenceType, className, locationName, extraInformationValue);
     }

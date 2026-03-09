@@ -6,12 +6,8 @@ package guru.thomasweber.tools.futuremaintenance.core.testsubjects;
 @SuppressWarnings("unused")
 public class WrongUsageAnnotatedSubject {
 
-  private final String field;
-
   @WrongUsageOfFutureMaintenance
-  public WrongUsageAnnotatedSubject(String value) {
-    this.field = value;
+  public WrongUsageAnnotatedSubject() {
+    // only here to demonstrate the annotation usage
   }
-
-  public void method(String param) {}
 }
