@@ -17,9 +17,9 @@ public class MaintenanceResolver {
   private static final String EXTRA_INFORMATION = "extraInformation";
 
   public static <T extends Enum<T> & MaintenanceTask> Optional<ResolvedTask<T>> resolve(
-      AnnotationInfoProvider annotationInfoProvider) {
+      AnnotationInfoProxy annotationInfoProxy) {
     // 1. Check for direct annotation
-    AnnotationInfo direct = annotationInfoProvider.getAnnotationInfo(FutureMaintenance.class.getName());
+    AnnotationInfo direct = annotationInfoProxy.getAnnotationInfo(FutureMaintenance.class.getName());
     if (direct != null) {
       Optional<ResolvedTask<T>> resolved = fromAnnotation(direct, direct);
       if (resolved.isPresent()) {
@@ -28,7 +28,7 @@ public class MaintenanceResolver {
     }
 
     // 2. Check for meta-annotation (The "Template" pattern)
-    for (AnnotationInfo usage : annotationInfoProvider.getAnnotationInfos()) {
+    for (AnnotationInfo usage : annotationInfoProxy.getAnnotationInfos()) {
       AnnotationInfo meta =
           usage.getClassInfo().getAnnotationInfo(FutureMaintenance.class.getName());
       if (meta != null) {

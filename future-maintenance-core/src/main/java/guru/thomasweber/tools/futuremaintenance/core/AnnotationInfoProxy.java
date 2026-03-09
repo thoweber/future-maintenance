@@ -11,19 +11,19 @@ import org.jspecify.annotations.Nullable;
 import static java.util.Objects.nonNull;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AnnotationInfoProvider {
+public class AnnotationInfoProxy {
 
   @Nullable
   private ClassInfo classInfo;
   @Nullable
   private ClassMemberInfo classMemberInfo;
 
-  public static AnnotationInfoProvider of(ClassInfo classInfo) {
-    return new AnnotationInfoProvider(classInfo, null);
+  public static AnnotationInfoProxy ofClassInfo(ClassInfo classInfo) {
+    return new AnnotationInfoProxy(classInfo, null);
   }
 
-  public static AnnotationInfoProvider of(ClassMemberInfo classMemberInfo) {
-    return new AnnotationInfoProvider(null, classMemberInfo);
+  public static AnnotationInfoProxy ofClassMemberInfo(ClassMemberInfo classMemberInfo) {
+    return new AnnotationInfoProxy(null, classMemberInfo);
   }
 
   public @Nullable AnnotationInfo getAnnotationInfo(String annotationName) {
@@ -46,13 +46,4 @@ public class AnnotationInfoProvider {
     throw new IllegalStateException("AnnotationInfoProvider is not initialized");
   }
 
-  public String getClassName() {
-    if (nonNull(classInfo)) {
-      return classInfo.getName();
-    }
-    if (nonNull(classMemberInfo)) {
-      return classMemberInfo.getClassInfo().getName();
-    }
-    throw new IllegalStateException("AnnotationInfoProvider is not initialized");
-  }
 }

@@ -59,7 +59,7 @@ public class MaintenanceScanner {
         .filter(fieldInfo -> fieldInfo.hasAnnotation(ANNOTATION))
         .map(
             fieldInfo ->
-                MaintenanceResolver.resolve(AnnotationInfoProvider.of(fieldInfo))
+                MaintenanceResolver.resolve(AnnotationInfoProxy.ofClassMemberInfo(fieldInfo))
                     .map(
                         resolvedTask ->
                             occurenceBuilder(resolvedTask)
@@ -75,7 +75,7 @@ public class MaintenanceScanner {
         .filter(methodInfo -> methodInfo.hasAnnotation(ANNOTATION))
         .map(
             methodInfo ->
-                MaintenanceResolver.resolve(AnnotationInfoProvider.of(methodInfo))
+                MaintenanceResolver.resolve(AnnotationInfoProxy.ofClassMemberInfo(methodInfo))
                     .map(
                         resolvedTask ->
                             occurenceBuilder(resolvedTask)
@@ -91,7 +91,7 @@ public class MaintenanceScanner {
         .filter(methodInfo -> methodInfo.hasAnnotation(ANNOTATION))
         .map(
             methodInfo ->
-                MaintenanceResolver.resolve(AnnotationInfoProvider.of(methodInfo))
+                MaintenanceResolver.resolve(AnnotationInfoProxy.ofClassMemberInfo(methodInfo))
                     .map(
                         resolvedTask ->
                             occurenceBuilder(resolvedTask)
@@ -103,7 +103,7 @@ public class MaintenanceScanner {
   }
 
   private void addTypeInfo(ClassInfo classInfo, List<MaintenanceOccurrence> results) {
-    MaintenanceResolver.resolve(AnnotationInfoProvider.of(classInfo))
+    MaintenanceResolver.resolve(AnnotationInfoProxy.ofClassInfo(classInfo))
         .map(
             resolvedTask ->
                 occurenceBuilder(resolvedTask)
