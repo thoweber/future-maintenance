@@ -10,5 +10,4 @@ public class WrongUsageAnnotatedSubject {
   public WrongUsageAnnotatedSubject() {
     // only here to demonstrate the annotation usage
   }
-
 }

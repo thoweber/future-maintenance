@@ -7,9 +7,8 @@ import guru.thomasweber.tools.futuremaintenance.api.FutureMaintenance;
 import guru.thomasweber.tools.futuremaintenance.api.MaintenanceTask;
 import io.github.classgraph.AnnotationClassRef;
 import io.github.classgraph.AnnotationInfo;
-import lombok.NoArgsConstructor;
-
 import java.util.Optional;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public final class MaintenanceResolver {
