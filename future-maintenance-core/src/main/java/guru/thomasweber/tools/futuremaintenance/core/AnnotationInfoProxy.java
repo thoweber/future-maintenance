@@ -1,49 +1,29 @@
+// SPDX-FileCopyrightText: 2026 Thomas Weber
+// SPDX-License-Identifier: MIT
+// For full license text see: https://github.com/thoweber/future-maintenance/blob/main/LICENSE
 package guru.thomasweber.tools.futuremaintenance.core;
+
+import static java.util.Objects.requireNonNull;
 
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationInfoList;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassMemberInfo;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import org.jspecify.annotations.Nullable;
 
-import static java.util.Objects.nonNull;
+public interface AnnotationInfoProxy {
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AnnotationInfoProxy {
-
-  @Nullable
-  private ClassInfo classInfo;
-  @Nullable
-  private ClassMemberInfo classMemberInfo;
-
-  public static AnnotationInfoProxy ofClassInfo(ClassInfo classInfo) {
-    return new AnnotationInfoProxy(classInfo, null);
+  static AnnotationInfoProxy ofClassInfo(ClassInfo classInfo) {
+    return new ClassInfoAnnotationInfoProxy(
+        requireNonNull(classInfo, "classInfo must not be null"));
   }
 
-  public static AnnotationInfoProxy ofClassMemberInfo(ClassMemberInfo classMemberInfo) {
-    return new AnnotationInfoProxy(null, classMemberInfo);
+  static AnnotationInfoProxy ofClassMemberInfo(ClassMemberInfo classMemberInfo) {
+    return new ClassMemberInfoAnnotationInfoProxy(
+        requireNonNull(classMemberInfo, "classMemberInfo must not be null"));
   }
 
-  public @Nullable AnnotationInfo getAnnotationInfo(String annotationName) {
-    if (nonNull(classInfo)) {
-      return classInfo.getAnnotationInfo(annotationName);
-    }
-    if (nonNull(classMemberInfo)) {
-      return classMemberInfo.getAnnotationInfo(annotationName);
-    }
-    throw new IllegalStateException("AnnotationInfoProvider is not initialized");
-  }
+  @Nullable AnnotationInfo getAnnotationInfo(String annotationName);
 
-  public AnnotationInfoList getAnnotationInfos() {
-    if (nonNull(classInfo)) {
-      return classInfo.getAnnotationInfo();
-    }
-    if (nonNull(classMemberInfo)) {
-      return classMemberInfo.getAnnotationInfo();
-    }
-    throw new IllegalStateException("AnnotationInfoProvider is not initialized");
-  }
-
+  AnnotationInfoList getAnnotationInfos();
 }

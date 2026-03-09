@@ -1,20 +1,21 @@
+// SPDX-FileCopyrightText: 2026 Thomas Weber
+// SPDX-License-Identifier: MIT
+// For full license text see: https://github.com/thoweber/future-maintenance/blob/main/LICENSE
 package guru.thomasweber.tools.futuremaintenance.core;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
 
 class AnnotationInfoProxyTest {
 
   @Test
-  void getAnnotationInfo_throwsIllegalStateException_whenNotInitialized() {
-    AnnotationInfoProxy provider = AnnotationInfoProxy.ofClassMemberInfo(null);
-    assertThrows(IllegalStateException.class, () -> provider.getAnnotationInfo("ignored"));
+  void ofClassMemberInfo_throwsNullPointerException() {
+    assertThrows(NullPointerException.class, () -> AnnotationInfoProxy.ofClassMemberInfo(null));
   }
 
   @Test
-  void getAnnotationInfos_throwsIllegalStateException_whenNotInitialized() {
-    AnnotationInfoProxy provider = AnnotationInfoProxy.ofClassMemberInfo(null);
-    assertThrows(IllegalStateException.class, provider::getAnnotationInfos);
+  void ofClassInfo_throwsNullPointerException() {
+    assertThrows(NullPointerException.class, () -> AnnotationInfoProxy.ofClassInfo(null));
   }
 }

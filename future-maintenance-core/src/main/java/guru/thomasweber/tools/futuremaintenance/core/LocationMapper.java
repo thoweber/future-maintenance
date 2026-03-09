@@ -6,22 +6,25 @@ package guru.thomasweber.tools.futuremaintenance.core;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
 import io.github.classgraph.MethodInfo;
-import lombok.NoArgsConstructor;
-
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public final class LocationMapper {
 
   public static String mapField(FieldInfo fieldInfo) {
-    return String.join(" ", fieldInfo.getTypeSignatureOrTypeDescriptor().toStringWithSimpleNames(),
+    return String.join(
+        " ",
+        fieldInfo.getTypeSignatureOrTypeDescriptor().toStringWithSimpleNames(),
         fieldInfo.getName());
   }
 
   public static String mapMethod(MethodInfo methodInfo) {
-    var parameters = Arrays.stream(methodInfo.getParameterInfo()).map(mpi -> mpi.getTypeSignatureOrTypeDescriptor().toStringWithSimpleNames())
-        .collect(Collectors.joining(", "));
+    var parameters =
+        Arrays.stream(methodInfo.getParameterInfo())
+            .map(mpi -> mpi.getTypeSignatureOrTypeDescriptor().toStringWithSimpleNames())
+            .collect(Collectors.joining(", "));
     return String.join("", methodInfo.getName(), "(", parameters, ")");
   }
 

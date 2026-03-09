@@ -4,7 +4,6 @@
 package guru.thomasweber.tools.futuremaintenance.core.testsubjects;
 
 import guru.thomasweber.tools.futuremaintenance.api.MaintenanceTask;
-
 import java.time.LocalDate;
 
 public enum OtherTaskEnumSubject implements MaintenanceTask {

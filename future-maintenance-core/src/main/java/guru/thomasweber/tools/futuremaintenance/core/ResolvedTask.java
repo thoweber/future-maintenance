@@ -4,23 +4,12 @@
 package guru.thomasweber.tools.futuremaintenance.core;
 
 import guru.thomasweber.tools.futuremaintenance.api.MaintenanceTask;
-import org.jspecify.annotations.Nullable;
-
 import java.time.LocalDate;
 import java.util.Optional;
+import org.jspecify.annotations.Nullable;
 
-public class ResolvedTask<T extends Enum<T> & MaintenanceTask> implements MaintenanceTask {
-  private final T enumConstant;
-  private final @Nullable String extraInformation;
-
-  public ResolvedTask(T enumConstant, @Nullable String extraInformation) {
-    this.enumConstant = enumConstant;
-    this.extraInformation = extraInformation;
-  }
-
-  public T enumConstant() {
-    return enumConstant;
-  }
+public record ResolvedTask<T extends Enum<T> & MaintenanceTask>(
+    T enumConstant, @Nullable String extraInformationValue) implements MaintenanceTask {
 
   @Override
   public String issueNumber() {
@@ -38,6 +27,6 @@ public class ResolvedTask<T extends Enum<T> & MaintenanceTask> implements Mainte
   }
 
   public Optional<String> extraInformation() {
-    return Optional.ofNullable(extraInformation);
+    return Optional.ofNullable(extraInformationValue);
   }
 }

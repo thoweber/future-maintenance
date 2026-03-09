@@ -49,8 +49,7 @@ public class MaintenanceScanner {
       MaintenanceOccurrence.MaintenanceOccurrenceBuilder occurenceBuilder(
           ResolvedTask<T> resolvedTask) {
     var enumConstant = resolvedTask.enumConstant();
-    return MaintenanceOccurrence.builder()
-        .key(MaintenanceOccurrence.Key.of(enumConstant))
+    return MaintenanceOccurrence.builder(MaintenanceOccurrence.Key.of(enumConstant))
         .extraInformation(resolvedTask.extraInformation().orElse(null));
   }
 
