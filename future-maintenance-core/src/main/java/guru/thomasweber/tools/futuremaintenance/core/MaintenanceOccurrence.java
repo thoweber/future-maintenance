@@ -4,57 +4,58 @@
 package guru.thomasweber.tools.futuremaintenance.core;
 
 import static java.util.Objects.isNull;
-import static java.util.Objects.requireNonNull;
 
 import guru.thomasweber.tools.futuremaintenance.api.MaintenanceTask;
 import java.time.LocalDate;
 import java.util.Optional;
-
-import lombok.*;
-import lombok.experimental.Accessors;
 import org.jspecify.annotations.Nullable;
 
-@Accessors(fluent = true)
-@Getter
-@Builder
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode
-@ToString
-public class MaintenanceOccurrence {
-
-  private final Key key;
-  @Getter(AccessLevel.NONE)
-  private final @Nullable String extraInformation;
-  private final OccurenceType occurenceType;
-  private final String className;
-  private final String locationName;
+public record MaintenanceOccurrence(
+    Key key,
+    OccurenceType occurenceType,
+    String className,
+    String location,
+    @Nullable String extraInformationValue) {
 
   public Optional<String> extraInformation() {
-    return Optional.ofNullable(extraInformation);
+    return Optional.ofNullable(extraInformationValue);
   }
 
+  @Override
   public OccurenceType occurenceType() {
-    requireNonNull(occurenceType, "occurenceType must be set before calling this method");
     return occurenceType;
   }
 
+  @Override
   public String className() {
-    requireNonNull(className, "className must be set before calling this method");
     return className;
   }
 
-  public String locationName() {
-    requireNonNull(locationName, "locationName must be set before calling this method");
-    return locationName;
+  @Override
+  public String location() {
+    return location;
   }
 
-  public static class MaintenanceOccurrenceBuilder {
+  public static MaintenanceOccurrenceBuilder builder(Key key) {
+    return new MaintenanceOccurrenceBuilder(key);
+  }
+
+  public static final class MaintenanceOccurrenceBuilder {
+    private final Key key;
+    private @Nullable String extraInformationValue;
+    private OccurenceType occurenceType;
+    private String className;
+    private String locationName;
+
+    private MaintenanceOccurrenceBuilder(Key key) {
+      this.key = key;
+    }
 
     public MaintenanceOccurrenceBuilder extraInformation(@Nullable String extraInformation) {
       if (isNull(extraInformation) || extraInformation.isBlank()) {
-        this.extraInformation = null;
+        this.extraInformationValue = null;
       } else {
-        this.extraInformation = extraInformation;
+        this.extraInformationValue = extraInformation;
       }
       return this;
     }
@@ -88,30 +89,25 @@ public class MaintenanceOccurrence {
     }
 
     private MaintenanceOccurrence build() {
-      return new MaintenanceOccurrence(this.key, this.extraInformation, this.occurenceType, this.className, this.locationName);
+      return new MaintenanceOccurrence(
+          key, occurenceType, className, locationName, extraInformationValue);
     }
   }
 
-  @Accessors(fluent = true)
-  @Getter
-  @EqualsAndHashCode
-  @ToString
-  public static final class Key implements MaintenanceTask {
-
-    private final Class<? extends MaintenanceTask> clazz;
-    private final String issueNumber;
-    private final LocalDate executableAfter;
-    private final String reason;
-
-    private Key(MaintenanceTask task) {
-      this.clazz = task.getClass();
-      this.issueNumber = task.issueNumber();
-      this.executableAfter = task.executableAfter();
-      this.reason = task.reason();
-    }
+  public record Key(
+      Class<? extends MaintenanceTask> clazz,
+      String issueNumber,
+      LocalDate executableAfter,
+      String reason)
+      implements MaintenanceTask {
 
     public static <T extends Enum<T> & MaintenanceTask> Key of(Enum<T> task) {
-      return new Key((MaintenanceTask) task);
+      var maintenanceTask = (MaintenanceTask) task;
+      return new Key(
+          maintenanceTask.getClass(),
+          maintenanceTask.issueNumber(),
+          maintenanceTask.executableAfter(),
+          maintenanceTask.reason());
     }
   }
 }
