@@ -5,9 +5,10 @@ import guru.thomasweber.tools.futuremaintenance.api.FutureMaintenance;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-@FutureMaintenance(taskClass = TaskEnumSubject.class) // Set once here
+@FutureMaintenance(taskClass = TaskEnumSubject.class)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MyFutureMaintenance {
-  String value(); // important: when using a custom annotation, do not use a default value here!
+public @interface WrongUsageOfFutureMaintenance {
+  // IMPORTANT: never use a default for "value" in your custom annotation!
+  String value() default "";
   String extraInformation() default "";
 }
